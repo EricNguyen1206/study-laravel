@@ -33,8 +33,4 @@ class HomeController extends Controller
     public function operHome() {
         return view('home', ['msg' => 'This is Operator Home']);
     }
-
-    public function adminDashboard() {
-        return view('dashboard.index', ['msg' => 'This is Admin Dashboard']);
-    }
 }

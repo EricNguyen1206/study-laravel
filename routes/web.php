@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\PasswordReset;
@@ -97,5 +98,5 @@ Route::middleware(['auth','check-role:oper'])->group(function()
 // Route Admin
 Route::middleware(['auth','check-role:admin'])->group(function()
 {
-    Route::get("/dashboard",[HomeController::class, 'adminDashboard'])->name("dashboard.index");
+    Route::get("/dashboard",[AdminController::class, 'index'])->name("dashboard.index");
 });
