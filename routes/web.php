@@ -99,4 +99,7 @@ Route::middleware(['auth','check-role:oper'])->group(function()
 Route::middleware(['auth','check-role:admin'])->group(function()
 {
     Route::get("/dashboard",[AdminController::class, 'index'])->name("dashboard.index");
+    Route::get('/dashboard/{user}/edit', [AdminController::class, 'edit'])->name('dashboard.edit');
+    Route::put('/dashboard/{user}', [AdminController::class, 'update'])->name('dashboard.update');
+    Route::delete('/dashboard/{user}', [AdminController::class, 'destroy'])->name('dashboard.destroy');
 });

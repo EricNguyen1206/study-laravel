@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class CreateUserSeeder extends Seeder
 {
@@ -15,31 +16,15 @@ class CreateUserSeeder extends Seeder
      */
     public function run()
     {
-        $users = [
-            [
-               'name'=>'User',
-               'email'=>'nuser@example.com',
-               'role'=> 0,
-               'password'=> bcrypt('123456'),
-            ],
-            [
-               'name'=>'Admin',
-               'email'=>'admin@example.com',
-               'role'=> 1,
-               'password'=> bcrypt('123456'),
-            ],
-            [
-               'name'=>'oper',
-               'email'=>'oper@example.com',
-               'role'=> 2,
-               'password'=> bcrypt('123456'),
-            ],
-            
-        ];
-    
-        foreach ($users as $key => $user) 
-        {
-            User::create($user);
+        for ($i = 1; $i <= 15; $i++) {
+            User::create([
+                'name' => 'User ' . $i,
+                'email' => 'user' . $i . '@example.com',
+                'email_verified_at' => now(),
+                'password' => bcrypt('123123123'),
+                'remember_token' => Str::random(10),
+                'role' => $i % 3,
+            ]);
         }
     }
 }

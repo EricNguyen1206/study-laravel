@@ -2,8 +2,12 @@
 
 @section('content')
 <div class="container mt-5">
-    <h1 class="mb-4">User Dashboard</h1>
-
+    <h1 class="mb-4">Admin Dashboard</h1>
+    @if(session('success'))
+    <div id="success-alert" class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
     <form method="GET" action="{{ route('dashboard.index') }}" class="form-inline card mb-4 border-primary rounded">
         <div class="card-header">
             Search
@@ -36,7 +40,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary mr-2" style="width: 100px;">Search</button>
             </div>
         </div>
@@ -50,6 +54,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Updated At</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -60,11 +65,45 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->role }}</td>
                 <td>{{ $user->updated_at }}</td>
+                <td>
+                    <a href="{{ route('dashboard.edit', $user->id) }}" class="btn btn-warning btn-sm {{ Auth::id() == $user->id ? 'disabled' : '' }}">Edit</a>
+                    <button class="btn btn-danger btn-sm delete-button" data-id="{{ $user->id }}" {{ Auth::id() == $user->id ? 'disabled' : '' }}>Delete</button>
+                </td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
     {{ $users->links('pagination::bootstrap-4') }}
+    <!-- Include the edit modal -->
+    @include('components.edit_modal')
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle delete button click
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this user?')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/dashboard/${userId}`;
+                    form.innerHTML = `
+                            @csrf
+                            @method('DELETE')
+                        `;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+    // Hide success alert after 5 seconds
+    const successAlert = document.getElementById('success-alert');
+    if (successAlert) {
+        setTimeout(() => {
+            successAlert.style.display = 'none';
+        }, 5000);
+    }
+</script>
 @endsection
