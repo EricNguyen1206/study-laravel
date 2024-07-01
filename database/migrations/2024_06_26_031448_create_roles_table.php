@@ -15,7 +15,15 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->timestamps();
+        });
+
+        // Add role_id to users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('role_id')->nullable()->after('id');
+
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
         });
     }
 

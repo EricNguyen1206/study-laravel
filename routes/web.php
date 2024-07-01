@@ -86,17 +86,17 @@ require __DIR__.'/auth.php';
 Auth::routes();
 
 // Route User
-Route::middleware(['auth','check-role:nuser'])->group(function()
+Route::middleware(['auth','check-role:0'])->group(function()
 {
     Route::get("/home",[HomeController::class, 'userHome'])->name("user.home");
 });
 // Route Editor
-Route::middleware(['auth','check-role:oper'])->group(function()
+Route::middleware(['auth','check-role:2'])->group(function()
 {
     Route::get("/oper/home",[HomeController::class, 'operHome'])->name("oper.home");
 });
 // Route Admin
-Route::middleware(['auth','check-role:admin'])->group(function()
+Route::middleware(['auth','check-role:1'])->group(function()
 {
     Route::get("/dashboard",[AdminController::class, 'index'])->name("dashboard.index");
     Route::get('/dashboard/{user}/edit', [AdminController::class, 'edit'])->name('dashboard.edit');

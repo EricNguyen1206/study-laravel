@@ -25,9 +25,9 @@
             @if (Route::has('login'))
                 <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     @auth
-                        @if (auth()->user()->role == 'admin')
+                        @if (auth()->user()->role == '1')
                             <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Dashboard</a>
-                        @elseif (auth()->user()->role == 'oper')
+                        @elseif (auth()->user()->role == '2')
                             <a href="{{ url('/oper/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Oper Home</a>
                         @else
                             <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
