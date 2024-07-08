@@ -1,11 +1,13 @@
+version: '3.8'
+
 services:
   # Laravel Service
   laravel:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     restart: unless-stopped
-    working_dir: /var/www
+    working_dir: /var/www/
     volumes:
       - ./:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
@@ -13,12 +15,13 @@ services:
       - 8000:8000
     depends_on:
       - mysql
+    tty: true
     environment:
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_DATABASE=user_management
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
     networks:
       - app-network
 
@@ -28,11 +31,14 @@ services:
     restart: unless-stopped
     volumes:
       - dbdata:/var/lib/mysql/
+    tty: true
     ports:
-      - 3306:3306
+      - ${DB_PORT}:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=laravel
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
     networks:
       - app-network
 
@@ -43,12 +49,26 @@ services:
     volumes:
       - .:/var/www
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    tty: true
     ports:
       - 80:80
     depends_on:
       - laravel
     networks:
       - app-network
+    
+  # PHPMyAdmin
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      restart: unless-stopped
+      ports:
+          - "8080:80"
+      environment:
+          PMA_HOST: ${DB_HOST}
+          PMA_PORT: ${DB_PORT}
+          MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      networks:
+          - app-network
 
 #Docker Networks
 networks:
